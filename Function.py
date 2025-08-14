@@ -23,20 +23,23 @@ def toggle_bot():
     keyboard.press_and_release("F6")
 
 
-def extract_letters(s):
-    return "".join(c for c in s if c.isalpha())
 
 
-def ld_contains(string, substring="Lie Detector"):
-    return substring in string
+def ld_contains(string: str, substring="Lie Detector"):
+    return str(substring) in str(string)
 
 
 def cut_LD_code(s):
+    s = str(s)
     parts = s.split(":", 1)
-    return parts[1].strip() if len(parts) > 1 else ""
+    return str(parts[1].strip()) if len(parts) > 1 else ""
 
 
-def check_ld(ld_image="lie.png", conf=0.6):
+def extract_letters(s):
+    s = str(s)
+    return str("".join(c for c in s if c.isalpha()))
+
+def check_ld(ld_image="lie.png", conf=0.7):
     if not os.path.exists(ld_image):
         print("Ảnh LD không tồn tại")
     else:

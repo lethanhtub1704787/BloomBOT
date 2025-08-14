@@ -22,7 +22,7 @@ width, height = pyautogui.size()
 reader = easyocr.Reader(["en"], gpu=True)
 # Thiết lập vùng chụp màn hình (toàn màn hình)
 monitor = {"top": 0, "left": 0, "width": width, "height": height}
-LD_code_area = {"top": 825, "left": 0, "width": 300, "height": 58}
+LD_code_area = {"top": 655, "left": 0, "width": 300, "height": 30}
 sct = mss()
 exit_flag = False
 pause_flag = False
@@ -72,11 +72,19 @@ while not exit_flag:
             )
             image = np.array(sct.grab(LD_code_area))
             ocr_results = reader.readtext(image)
-            text = Function.get_LD_code(ocr_results)
-            print("LD code: " + text)
+            LD_code = ''
+            for bbox, text,conf in ocr_results:
+                if Function.ld_contains(text):
+                    LD_code = Function.cut_LD_code(text)
+                    print("LD_code cut type: "+type(LD_code))
+                    break
+            extract_LD_code = Function.extract_letters(LD_code)
+            print("extracted LD_code  type: "+type(extract_LD_code))
+            # text = Function.get_LD_code(ocr_results)
+            print("LD code: " + extract_LD_code)
             pyautogui.click(pyautogui.center(ld_confirm))
             time.sleep(0.5)
-            keyboard.write(text)
+            keyboard.write(extract_LD_code)
             Function.call_me()
             sys.exit()
     except Exception as e:
